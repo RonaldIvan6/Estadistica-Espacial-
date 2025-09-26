@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ivan Ronaldo Acero Acero</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Partículas de fondo */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 1; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.5; }
+        }
+
+        /* Contenedor principal */
+        .container {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        /* Header con nombre */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: slideInTop 1s ease-out;
+        }
+
+        .name {
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #4ecdc4;
+            font-weight: 500;
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+            margin-bottom: 1.5rem;
+        }
+
+        .university-info {
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.8s forwards;
+        }
+
+        .university {
+            font-size: 1.4rem;
+            color: #ff6b6b;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .career {
+            font-size: 1.2rem;
+            color: #96ceb4;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Cards flotantes */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: cardAppear 0.8s ease-out forwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.8s; }
+        .card:nth-child(2) { animation-delay: 1s; }
+        .card:nth-child(3) { animation-delay: 1.2s; }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+
+        .card:hover::before {
+            animation: shine 1s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .card p {
+            color: #ccc;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        /* Botón interactivo */
+        .interactive-btn {
+            margin-top: 3rem;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1.5s forwards;
+        }
+
+        .interactive-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .interactive-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Ondas de fondo */
+        .wave {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120'%3E%3Cpath d='M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E") repeat-x;
+            animation: waveMove 10s linear infinite;
+        }
+
+        @keyframes waveMove {
+            0% { background-position-x: 0; }
+            100% { background-position-x: 1200px; }
+        }
+
+        /* Animaciones */
+        @keyframes slideInTop {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes cardAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) rotate(45deg); opacity: 0; }
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .name {
+                font-size: 3rem;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Efectos adicionales */
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+            to { text-shadow: 0 0 30px rgba(78, 205, 196, 0.6); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Partículas de fondo -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Ondas de fondo -->
+    <div class="wave"></div>
+
+    <!-- Contenido principal -->
+    <div class="container">
+        <header class="header">
+            <h1 class="name glow">IVAN RONALDO ACERO ACERO</h1>
+            <p class="subtitle">ESTUDIANTE DE DÉCIMO SEMESTRE</p>
+            <div class="university-info">
+                <p class="university">Universidad Nacional del Altiplano</p>
+                <p class="career">Ingeniería Estadística e Informática</p>
+            </div>
+        </header>
+
+        <div class="cards-container">
+            <div class="card">
+                <span class="card-icon">📊</span>
+                <h3>Estadística</h3>
+                <p>Análisis de datos, modelado estadístico y técnicas de investigación para la toma de decisiones basada en evidencia.</p>
+            </div>
+
+            <div class="card">
+                <span class="card-icon">💻</span>
+                <h3>Informática</h3>
+                <p>Programación, desarrollo de software y sistemas de información para resolver problemas complejos.</p>
+            </div>
+
+            <div class="card">
+                <span class="card-icon">🎓</span>
+                <h3>Formación</h3>
+                <p>Décimo semestre en la Universidad Nacional del Altiplano, combinando teoría y práctica profesional.</p>
+            </div>
+        </div>
+
+        <button class="interactive-btn" onclick="animateCards()">
+            Ver Proyectos
+        </button>
+    </div>
+
+    <script>
+        // Crear partículas flotantes
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Posición aleatoria
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                
+                // Delay de animación aleatorio
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                
+                // Tamaño aleatorio
+                const size = Math.random() * 3 + 1;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Animar cards al hacer clic
+        function animateCards() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.transform = 'scale(1.1) rotate(5deg)';
+                    setTimeout(() => {
+                        card.style.transform = 'scale(1) rotate(0deg)';
+                    }, 300);
+                }, index * 100);
+            });
+
+            // Efecto en el botón
+            const btn = document.querySelector('.interactive-btn');
+            btn.style.background = 'linear-gradient(45deg, #4ecdc4, #ff6b6b)';
+            setTimeout(() => {
+                btn.style.background = 'linear-gradient(45deg, #ff6b6b, #4ecdc4)';
+            }, 500);
+        }
+
+        // Efecto de movimiento del mouse
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.card');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            cards.forEach((card, index) => {
+                const speed = (index + 1) * 0.5;
+                const xMove = (x - 0.5) * speed;
+                const yMove = (y - 0.5) * speed;
+                
+                card.style.transform += ` translate(${xMove}px, ${yMove}px)`;
+            });
+        });
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            
+            // Efecto de typing en el nombre
+            const nameElement = document.querySelector('.name');
+            const originalText = nameElement.innerHTML;
+            nameElement.innerHTML = '';
+            
+            let i = 0;
+            const typeWriter = () => {
+                if (i < originalText.length) {
+                    nameElement.innerHTML += originalText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100);
+                }
+            };
+            
+            setTimeout(typeWriter, 500);
+        });
+
+        // Efecto de scroll suave
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            document.querySelector('.particles').style.transform = `translateY(${rate}px)`;
+        });
+    </script>
+</body>
+</html>
