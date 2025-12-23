@@ -392,6 +392,184 @@
             100% { transform: translateX(100%) rotate(45deg); opacity: 0; }
         }
 
+        /* Modal para visualizar archivos */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            max-width: 1200px;
+            background: rgba(26, 26, 46, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            animation: slideInModal 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInModal {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(78, 205, 196, 0.3);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #4ecdc4;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            word-break: break-word;
+            flex: 1;
+            margin-right: 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .modal-btn {
+            background: rgba(78, 205, 196, 0.2);
+            border: 1px solid #4ecdc4;
+            color: #4ecdc4;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .modal-btn:hover {
+            background: rgba(78, 205, 196, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .close-modal {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 107, 107, 0.4);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #fff;
+            position: relative;
+        }
+
+        .modal-body iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .modal-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #4ecdc4;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(78, 205, 196, 0.3);
+            border-top: 4px solid #4ecdc4;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .file-preview-error {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #ff6b6b;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .file-preview-error h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .file-preview-error p {
+            color: #ccc;
+            margin-bottom: 1.5rem;
+        }
+
         /* Responsivo */
         @media (max-width: 768px) {
             .name {
@@ -413,6 +591,26 @@
 
             .repository-header h2 {
                 font-size: 2rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                height: 95%;
+                padding: 1rem;
+            }
+
+            .modal-title {
+                font-size: 1.1rem;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-btn {
+                font-size: 0.9rem;
+                padding: 0.4rem 0.8rem;
             }
         }
 
@@ -486,6 +684,32 @@
         </a>
     </div>
 
+    <!-- Modal para visualizar archivos -->
+    <div id="fileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalFileName">
+                    📄 Archivo
+                </div>
+                <div class="modal-actions">
+                    <a id="downloadBtn" class="modal-btn" download target="_blank">
+                        ⬇️ Descargar
+                    </a>
+                    <a id="githubBtn" class="modal-btn" target="_blank">
+                        🔗 Ver en GitHub
+                    </a>
+                    <button class="close-modal" onclick="closeModal()">✕</button>
+                </div>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div class="modal-loader">
+                    <div class="spinner"></div>
+                    <p>Cargando archivo...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Configuración del repositorio
         const GITHUB_CONFIG = {
@@ -495,6 +719,122 @@
         };
 
         let currentPath = '';
+
+        // Funciones para el modal
+        function openModal(file) {
+            const modal = document.getElementById('fileModal');
+            const modalBody = document.getElementById('modalBody');
+            const modalFileName = document.getElementById('modalFileName');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const githubBtn = document.getElementById('githubBtn');
+
+            // Configurar título y botones
+            modalFileName.innerHTML = `${getFileIcon(file.name, file.type)} ${file.name}`;
+            downloadBtn.href = file.download_url;
+            downloadBtn.download = file.name;
+            githubBtn.href = file.html_url;
+
+            // Mostrar loader
+            modalBody.innerHTML = `
+                <div class="modal-loader">
+                    <div class="spinner"></div>
+                    <p>Cargando archivo...</p>
+                </div>
+            `;
+
+            // Abrir modal
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Cargar contenido según el tipo de archivo
+            const ext = file.name.split('.').pop().toLowerCase();
+            
+            if (ext === 'pdf') {
+                // Para PDFs, usar Google Docs Viewer o iframe directo
+                const pdfUrl = file.download_url;
+                setTimeout(() => {
+                    modalBody.innerHTML = `
+                        <iframe src="https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true"></iframe>
+                    `;
+                }, 500);
+            } else if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext)) {
+                // Para imágenes
+                setTimeout(() => {
+                    modalBody.innerHTML = `
+                        <div style="display: flex; justify-content: center; align-items: center; height: 100%; background: #000;">
+                            <img src="${file.download_url}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="${file.name}">
+                        </div>
+                    `;
+                }, 500);
+            } else if (['txt', 'md', 'json', 'csv', 'xml', 'py', 'js', 'html', 'css', 'r'].includes(ext)) {
+                // Para archivos de texto
+                fetch(file.download_url)
+                    .then(response => response.text())
+                    .then(text => {
+                        modalBody.innerHTML = `
+                            <div style="height: 100%; overflow: auto; padding: 1rem; background: #1a1a2e; color: #fff;">
+                                <pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word; font-family: 'Courier New', monospace;">${escapeHtml(text)}</pre>
+                            </div>
+                        `;
+                    })
+                    .catch(error => {
+                        showPreviewError(modalBody, file);
+                    });
+            } else {
+                // Para otros tipos de archivo
+                showPreviewError(modalBody, file);
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('fileModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // Limpiar contenido
+            setTimeout(() => {
+                document.getElementById('modalBody').innerHTML = `
+                    <div class="modal-loader">
+                        <div class="spinner"></div>
+                        <p>Cargando archivo...</p>
+                    </div>
+                `;
+            }, 300);
+        }
+
+        function showPreviewError(modalBody, file) {
+            modalBody.innerHTML = `
+                <div class="file-preview-error">
+                    <h3>⚠️ Vista previa no disponible</h3>
+                    <p>Este tipo de archivo no se puede previsualizar en el navegador.</p>
+                    <p>Puedes descargarlo o verlo en GitHub usando los botones de arriba.</p>
+                    <div style="margin-top: 1rem; color: #4ecdc4;">
+                        Tipo de archivo: <strong>${file.name.split('.').pop().toUpperCase()}</strong>
+                    </div>
+                </div>
+            `;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('fileModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Cerrar modal con la tecla ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
 
         // Crear partículas flotantes
         function createParticles() {
@@ -644,13 +984,17 @@
                 files.forEach(file => {
                     const fileCard = document.createElement('a');
                     fileCard.className = file.type === 'dir' ? 'file-card folder-card' : 'file-card';
-                    fileCard.href = file.type === 'dir' ? '#' : file.html_url;
-                    fileCard.target = file.type === 'dir' ? '_self' : '_blank';
+                    fileCard.href = '#';
                     
                     if (file.type === 'dir') {
                         fileCard.onclick = (e) => {
                             e.preventDefault();
                             loadRepositoryFiles(file.path);
+                        };
+                    } else {
+                        fileCard.onclick = (e) => {
+                            e.preventDefault();
+                            openModal(file);
                         };
                     }
 
