@@ -182,6 +182,134 @@
             font-size: 1.1rem;
         }
 
+        /* Sección de archivos del repositorio */
+        .repository-section {
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 4rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1.3s forwards;
+        }
+
+        .repository-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .repository-header h2 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .repository-header p {
+            color: #96ceb4;
+            font-size: 1.1rem;
+        }
+
+        .files-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .file-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .file-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(78, 205, 196, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .file-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            word-break: break-word;
+        }
+
+        .file-size {
+            font-size: 0.9rem;
+            color: #4ecdc4;
+        }
+
+        .file-type {
+            font-size: 0.85rem;
+            color: #96ceb4;
+            text-transform: uppercase;
+        }
+
+        .folder-card {
+            border-left: 3px solid #ffeaa7;
+        }
+
+        .folder-card:hover {
+            border-color: #ffeaa7;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #4ecdc4;
+            padding: 2rem;
+        }
+
+        .error-message {
+            text-align: center;
+            color: #ff6b6b;
+            padding: 2rem;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        /* Breadcrumb para navegación */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-item {
+            color: #4ecdc4;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .breadcrumb-item:hover {
+            color: #45b7d1;
+            text-decoration: underline;
+        }
+
+        .breadcrumb-separator {
+            color: #666;
+        }
+
         /* Botón interactivo */
         .interactive-btn {
             margin-top: 3rem;
@@ -198,6 +326,8 @@
             overflow: hidden;
             opacity: 0;
             animation: fadeInUp 1s ease-out 1.5s forwards;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .interactive-btn:hover {
@@ -275,6 +405,14 @@
             .card {
                 padding: 1.5rem;
             }
+
+            .files-container {
+                grid-template-columns: 1fr;
+            }
+
+            .repository-header h2 {
+                font-size: 2rem;
+            }
         }
 
         /* Efectos adicionales */
@@ -326,12 +464,37 @@
             </div>
         </div>
 
-        <a href="https://github.com/RonaldIvan6/Estadistica-Espacial-/tree/main" class="interactive-btn" style="text-decoration: none; display: inline-block;">
-            Ver Proyectos
+        <a href="https://github.com/RonaldIvan6/Estadistica-Espacial-" target="_blank" class="interactive-btn">
+            Ver Repositorio Completo
         </a>
+
+        <!-- Sección de archivos del repositorio -->
+        <section class="repository-section">
+            <div class="repository-header">
+                <h2>📁 Archivos del Repositorio</h2>
+                <p>Explora las tareas y proyectos subidos</p>
+            </div>
+            
+            <!-- Breadcrumb para navegación -->
+            <div class="breadcrumb" id="breadcrumb"></div>
+            
+            <!-- Contenedor de archivos -->
+            <div id="filesContainer" class="files-container">
+                <div class="loading">Cargando archivos del repositorio...</div>
+            </div>
+        </section>
     </div>
 
     <script>
+        // Configuración del repositorio
+        const GITHUB_CONFIG = {
+            owner: 'RonaldIvan6',
+            repo: 'Estadistica-Espacial-',
+            branch: 'main'
+        };
+
+        let currentPath = '';
+
         // Crear partículas flotantes
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
@@ -341,14 +504,10 @@
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 
-                // Posición aleatoria
                 particle.style.left = Math.random() * 100 + '%';
                 particle.style.top = Math.random() * 100 + '%';
-                
-                // Delay de animación aleatorio
                 particle.style.animationDelay = Math.random() * 6 + 's';
                 
-                // Tamaño aleatorio
                 const size = Math.random() * 3 + 1;
                 particle.style.width = size + 'px';
                 particle.style.height = size + 'px';
@@ -357,26 +516,184 @@
             }
         }
 
-        // Animar cards al hacer clic
-        function animateCards() {
-            const cards = document.querySelectorAll('.card');
-            cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.transform = 'scale(1.1) rotate(5deg)';
-                    setTimeout(() => {
-                        card.style.transform = 'scale(1) rotate(0deg)';
-                    }, 300);
-                }, index * 100);
-            });
+        // Obtener icono según el tipo de archivo
+        function getFileIcon(name, type) {
+            if (type === 'dir') return '📁';
+            
+            const ext = name.split('.').pop().toLowerCase();
+            const iconMap = {
+                'pdf': '📄',
+                'doc': '📝',
+                'docx': '📝',
+                'xls': '📊',
+                'xlsx': '📊',
+                'ppt': '📊',
+                'pptx': '📊',
+                'txt': '📄',
+                'md': '📝',
+                'py': '🐍',
+                'js': '📜',
+                'html': '🌐',
+                'css': '🎨',
+                'jpg': '🖼️',
+                'jpeg': '🖼️',
+                'png': '🖼️',
+                'gif': '🖼️',
+                'zip': '📦',
+                'rar': '📦',
+                'r': '📈',
+                'csv': '📊'
+            };
+            
+            return iconMap[ext] || '📄';
+        }
 
-            // Efecto en el botón
-            const btn = document.querySelector('.interactive-btn');
-            btn.style.background = 'linear-gradient(45deg, #4ecdc4, #ff6b6b)';
-            setTimeout(() => {
-                btn.style.background = 'linear-gradient(45deg, #ff6b6b, #4ecdc4)';
-                // Redirigir al repositorio de GitHub
-                window.location.href = 'https://github.com/RonaldIvan6/Estadistica-Espacial-/tree/main';
-            }, 500);
+        // Formatear tamaño de archivo
+        function formatFileSize(bytes) {
+            if (!bytes) return '';
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        // Obtener tipo de archivo
+        function getFileType(name) {
+            const ext = name.split('.').pop().toLowerCase();
+            return ext;
+        }
+
+        // Actualizar breadcrumb
+        function updateBreadcrumb(path) {
+            const breadcrumb = document.getElementById('breadcrumb');
+            breadcrumb.innerHTML = '';
+
+            const parts = path ? path.split('/') : [];
+            
+            // Agregar "Inicio"
+            const homeItem = document.createElement('a');
+            homeItem.textContent = '🏠 Inicio';
+            homeItem.className = 'breadcrumb-item';
+            homeItem.href = '#';
+            homeItem.onclick = (e) => {
+                e.preventDefault();
+                loadRepositoryFiles('');
+            };
+            breadcrumb.appendChild(homeItem);
+
+            // Agregar cada parte del path
+            let accumulatedPath = '';
+            parts.forEach((part, index) => {
+                if (part) {
+                    const separator = document.createElement('span');
+                    separator.textContent = '/';
+                    separator.className = 'breadcrumb-separator';
+                    breadcrumb.appendChild(separator);
+
+                    accumulatedPath += (accumulatedPath ? '/' : '') + part;
+                    const pathItem = document.createElement('a');
+                    pathItem.textContent = part;
+                    pathItem.className = 'breadcrumb-item';
+                    pathItem.href = '#';
+                    
+                    const pathToLoad = accumulatedPath;
+                    pathItem.onclick = (e) => {
+                        e.preventDefault();
+                        loadRepositoryFiles(pathToLoad);
+                    };
+                    
+                    breadcrumb.appendChild(pathItem);
+                }
+            });
+        }
+
+        // Cargar archivos del repositorio
+        async function loadRepositoryFiles(path = '') {
+            const container = document.getElementById('filesContainer');
+            container.innerHTML = '<div class="loading">Cargando archivos...</div>';
+            
+            currentPath = path;
+            updateBreadcrumb(path);
+
+            const apiUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${path}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error('No se pudieron cargar los archivos');
+                }
+
+                const files = await response.json();
+                
+                if (files.length === 0) {
+                    container.innerHTML = '<div class="error-message">Esta carpeta está vacía</div>';
+                    return;
+                }
+
+                // Ordenar: carpetas primero, luego archivos
+                files.sort((a, b) => {
+                    if (a.type === b.type) {
+                        return a.name.localeCompare(b.name);
+                    }
+                    return a.type === 'dir' ? -1 : 1;
+                });
+
+                container.innerHTML = '';
+
+                files.forEach(file => {
+                    const fileCard = document.createElement('a');
+                    fileCard.className = file.type === 'dir' ? 'file-card folder-card' : 'file-card';
+                    fileCard.href = file.type === 'dir' ? '#' : file.html_url;
+                    fileCard.target = file.type === 'dir' ? '_self' : '_blank';
+                    
+                    if (file.type === 'dir') {
+                        fileCard.onclick = (e) => {
+                            e.preventDefault();
+                            loadRepositoryFiles(file.path);
+                        };
+                    }
+
+                    const icon = document.createElement('div');
+                    icon.className = 'file-icon';
+                    icon.textContent = getFileIcon(file.name, file.type);
+
+                    const name = document.createElement('div');
+                    name.className = 'file-name';
+                    name.textContent = file.name;
+
+                    fileCard.appendChild(icon);
+                    fileCard.appendChild(name);
+
+                    if (file.type === 'file') {
+                        const size = document.createElement('div');
+                        size.className = 'file-size';
+                        size.textContent = formatFileSize(file.size);
+                        fileCard.appendChild(size);
+
+                        const type = document.createElement('div');
+                        type.className = 'file-type';
+                        type.textContent = getFileType(file.name);
+                        fileCard.appendChild(type);
+                    } else {
+                        const folderLabel = document.createElement('div');
+                        folderLabel.className = 'file-type';
+                        folderLabel.textContent = 'CARPETA';
+                        fileCard.appendChild(folderLabel);
+                    }
+
+                    container.appendChild(fileCard);
+                });
+
+            } catch (error) {
+                console.error('Error al cargar archivos:', error);
+                container.innerHTML = `
+                    <div class="error-message">
+                        <h3>Error al cargar archivos</h3>
+                        <p>${error.message}</p>
+                        <p>Por favor, verifica que el repositorio existe y es público.</p>
+                    </div>
+                `;
+            }
         }
 
         // Efecto de movimiento del mouse
@@ -413,6 +730,11 @@
             };
             
             setTimeout(typeWriter, 500);
+
+            // Cargar archivos del repositorio
+            setTimeout(() => {
+                loadRepositoryFiles();
+            }, 1000);
         });
 
         // Efecto de scroll suave
