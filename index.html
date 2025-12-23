@@ -137,9 +137,9 @@
             animation: cardAppear 0.8s ease-out forwards;
         }
 
-        .card:nth-child(1) { animation-delay: 0.8s; }
-        .card:nth-child(2) { animation-delay: 1s; }
-        .card:nth-child(3) { animation-delay: 1.2s; }
+        .card:nth-child(1) { animation-delay: 1.3s; }
+        .card:nth-child(2) { animation-delay: 1.5s; }
+        .card:nth-child(3) { animation-delay: 1.7s; }
 
         .card::before {
             content: '';
@@ -186,9 +186,10 @@
         .repository-section {
             max-width: 1200px;
             width: 100%;
-            margin-top: 4rem;
+            margin-top: 2rem;
+            margin-bottom: 3rem;
             opacity: 0;
-            animation: fadeInUp 1s ease-out 1.3s forwards;
+            animation: fadeInUp 1s ease-out 0.8s forwards;
         }
 
         .repository-header {
@@ -325,7 +326,7 @@
             position: relative;
             overflow: hidden;
             opacity: 0;
-            animation: fadeInUp 1s ease-out 1.5s forwards;
+            animation: fadeInUp 1s ease-out 2s forwards;
             text-decoration: none;
             display: inline-block;
         }
@@ -444,6 +445,22 @@
             </div>
         </header>
 
+        <!-- Sección de archivos del repositorio -->
+        <section class="repository-section">
+            <div class="repository-header">
+                <h2>📁 Archivos del Repositorio</h2>
+                <p>Explora las tareas y proyectos subidos</p>
+            </div>
+            
+            <!-- Breadcrumb para navegación -->
+            <div class="breadcrumb" id="breadcrumb"></div>
+            
+            <!-- Contenedor de archivos -->
+            <div id="filesContainer" class="files-container">
+                <div class="loading">Cargando archivos del repositorio...</div>
+            </div>
+        </section>
+
         <div class="cards-container">
             <div class="card">
                 <span class="card-icon">📊</span>
@@ -467,22 +484,6 @@
         <a href="https://github.com/RonaldIvan6/Estadistica-Espacial-" target="_blank" class="interactive-btn">
             Ver Repositorio Completo
         </a>
-
-        <!-- Sección de archivos del repositorio -->
-        <section class="repository-section">
-            <div class="repository-header">
-                <h2>📁 Archivos del Repositorio</h2>
-                <p>Explora las tareas y proyectos subidos</p>
-            </div>
-            
-            <!-- Breadcrumb para navegación -->
-            <div class="breadcrumb" id="breadcrumb"></div>
-            
-            <!-- Contenedor de archivos -->
-            <div id="filesContainer" class="files-container">
-                <div class="loading">Cargando archivos del repositorio...</div>
-            </div>
-        </section>
     </div>
 
     <script>
